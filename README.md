@@ -9,17 +9,29 @@
 
 | Файл | Назначение |
 |---|---|
+| `README.md` | Этот файл |
 | `SOUL.md` | Личность агента — скромный ленивый сотрудник, кофе, перекуры |
 | `AGENTS.md` | Рабочая инструкция: график дня, правила поведения, что искать |
 | `skills/avito-patrol/SKILL.md` | Навык «патруль Авито»: точная методика сбора (накопана на практике) |
-| `setup.md` | Установка и настройка: Hermes, cron-задания + два варианта браузера: встроенный `browser_exec` или MCP-расширение browse в реальном браузере |
+| `INSTALL_PROMPT.md` | **Главный способ установки**: промпт, который вставляется в чат Hermes — агент сам всё ставит |
+| `setup.md` | Ручная установка командами + настройка браузера и cron (справочник) |
 
-## Быстрый старт (3 команды)
+## Установка — вариант 1: одним промптом (рекомендуется)
+
+Откройте чат с Hermes Agent (любой профиль) и вставьте промпт из
+**[INSTALL_PROMPT.md](INSTALL_PROMPT.md)**. Агент сам склонирует репозиторий,
+спросит тему, регион и вариант браузера, установит файлы, навык и cron-задание,
+а в конце покажет, что осталось сделать вручную (вход на Авито — только человек).
+
+## Установка — вариант 2: вручную командами
 
 ```bash
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
-cp SOUL.md ~/.hermes/SOUL.md && cp AGENTS.md ~/avito-patrol/AGENTS.md
+git clone https://github.com/Delobot/hermes-avito-profile && cd hermes-avito-profile
+cp SOUL.md ~/.hermes/SOUL.md && mkdir -p ~/avito-patrol && cp AGENTS.md ~/avito-patrol/
+cp -r skills/avito-patrol ~/.hermes/skills/
+# заполните блок «Настройки» в ~/avito-patrol/AGENTS.md (тема, регион, запросы)
 hermes cron create "0 9 * * 1-5" "Начать смену по инструкции AGENTS.md (патруль Авито)" --skill avito-patrol --workdir ~/avito-patrol
 ```
 
-Подробности — в `setup.md`.
+Подробности обоих путей — в `setup.md`.
